@@ -1,6 +1,6 @@
 {
   "name": "graphite-docs",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Graphite's Node API",
   "main": "index.js",
   "repository": {
