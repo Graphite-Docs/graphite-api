@@ -10,7 +10,7 @@ The official Node API for Graphite Docs.
 ### Usage
 
 ```
-const { handleOAuthFlow, decryptPayload } = require("graphite-docs");
+import { handleOAuthFlow, decryptPayload }  from 'graphite-docs';
 
 //redirect to sign in
 handleOAuthFlow(targetURI, appName, redirectURI);
