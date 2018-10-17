@@ -10,7 +10,11 @@ The official Node API for Graphite Docs.
 ### Usage
 
 ```
+<<<<<<< HEAD
 import { handleOAuthFlow, decryptPayload } from 'graphite-docs';
+=======
+import { handleOAuthFlow, decryptPayload }  from 'graphite-docs';
+>>>>>>> d9425f0cd3eebc1a691f65aa2a5eb303e8a32006
 
 //redirect to sign in
 handleOAuthFlow(targetURI, appName, redirectURI);
