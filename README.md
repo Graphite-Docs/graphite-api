@@ -7,7 +7,7 @@ The official Node API for Graphite Docs.
 `npm i graphite-api`
 
 
-###Usage
+### Usage
 
 ```
 const { handleOAuthFlow, decryptPayload } = require("graphite-docs");
