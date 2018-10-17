@@ -51,7 +51,87 @@ console.log(decryptPayload(token))
   * [Graphite Vault](#writing-graphite-vault)   
   * [Graphite Contacts](#writing-graphite-contacts)  
 
-#### Reading Graphite Documents  
+### OAuth Flow
+
+Graphite utilizes a similar authentication/access flow to the OAuth 2.0 standard. The differences are simply tied to the fact that all authentication and API access happens client side and users own their identity and data, not Graphite.
+
+In order to kick off the authentication flow, you will need to trigger the `handleOAuthFlow()` function. This is usually done by wiring up a button that, when clicked, provides the necessary variables then makes the redirect to Graphite. There are three required variables that must be included in the `handleOAuthFlow()` function as an object:
+
+1. Your Application Name  
+2. Your Redirect URI
+3. Your Graphite API Key
+
+The function takes those variables in the form of an object as follows:
+
+* appName [String]  
+* redirectURI [String]
+* apiKey [String]
+
+Here is an example:
+
+```
+const object = {};
+object.appName = "Super Cool App";
+object.redirectURI = "https://appname.appdomain.com";
+object.apiKey = "0221bd0bb646c069b5df70031b51fec31ea1ba9061e420616e49824ac5b8703077";
+handleOAuthFlow(object)
+
+//As soon as the function is called, the user should be redirected to Graphite to sign in and approve the authentication
+```
+
+In addition to redirecting the user to Graphite with the necessary information, a couple things happen on your app's side before the redirect happens. A transit key pair is generated (public key and private key). The private key is stored to the user's localStorage. The public key is passed along with the other options you included in your call to `handleOAuthFlow()`.
+
+On Graphite's end, if the user approves authentication, the private information necessary to read and write files is encrypted with the public key that was passed over on the redirect to auth. That encrypted information is then encoded in a JSON web token and passed back through to your app as a URL parameter.
+
+In order to decrypt and use the payload sent in the JSON web token, you will need to parse the token from the URL and then call `decryptPayload()` with that token. Here's an example:
+
+```
+const payload = decryptPayload(token);
+console.log(JSON.parse(payload));
+```
+
+### Understanding The Payload
+
+When the authentication flow is complete and you've received the payload, it's important to understand what you're looking at. You will have received an object back that includes the following:
+
+* Public key
+* Private key  
+* A Blockstack Gaia Hub Config object
+
+The public and private key pair are the specific keys associated with Graphite. They are not useful with any other app. This key pair is important because it is what should be used for encrypting new files (public key) and decrypting files you fetch from the user's storage hub (private key).
+
+The Gaia Hub Config object includes the information that will make it easy for you to write to the user's Graphite storage hub if necessary. Here's an example config file:
+
+```
+{
+  address: $address
+  server: "https://hub.blockstack.org"
+  token: $token
+  url_prefix: "https://gaia.blockstack.org/hub/"
+}
+```
+
+The address is combined with the url_prefix to create the read path address as covered in [The Read Path](#the-read-path). The server path is combined with the address to create the write path as covered in [The Write Path](#the-write-path). The token is the bearer token that will be used in making POST requests to the user's storage hub.
+
+### The Read Path  
+
+The read path is the path at which a user's documents are stored. It is derived from the user's Blockstack Gaia Hub Config object. The read path is a combination of url_prefix, which is the root of the read path, and the address which is the key specific to that user and to Graphite that identifies the correct storage hub to read from.
+
+The read path alone is not enough to do anything with. You must also include the file path at the end. The Graphite API largely takes care of this for you, but here is an example read path that display a public Graphite document (not encrypted):
+
+`https://gaia.blockstack.org/hub/1M16iy9tw9x2KAiwJZUGRvkkJC5adqmuZb/public/1531783110624.json`
+
+### The Write Path
+
+Similar to the read path, the write path is derived from the Blockstack Gaia Hub Config object. This is the path used if any new files are going to be created or if any existing file are to be updated. The write path is a combination of the server url from the config object and the address.
+
+Just like with the read path, the write path requires a little more information beyond the server url and the address. An additional url path of `/store` is necessary, and so is the file name being created or updated. Here's an example write path:
+
+`https://hub.blockstack.org/store/1M16iy9tw9x2KAiwJZUGRvkkJC5adqmuZb/public/1531783110624.json`
+
+You won't be able to see anything at that address, but you would be able to write to that address if you had the correct bearer token. Again, this is largely handled by the Graphite API.
+
+### Reading Graphite Documents  
 
 Graphite documents are made up of two main components:
 
