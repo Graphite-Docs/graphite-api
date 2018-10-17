@@ -13,6 +13,7 @@
   "author": "",
   "license": "GNU GENERAL PUBLIC LICENSE",
   "dependencies": {
+    "axios": "^0.18.0",
     "blockstack": "^18.0.4",
     "jsontokens": "^0.8.0"
   }

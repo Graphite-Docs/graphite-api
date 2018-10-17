@@ -59,7 +59,7 @@ In order to kick off the authentication flow, you will need to trigger the `hand
 
 1. Your Application Name  
 2. Your Redirect URI
-3. Your Graphite API Key
+3. Your Graphite API Key (not implemented yet)
 
 The function takes those variables in the form of an object as follows:
 
@@ -148,21 +148,27 @@ The storage path is obtained from the Authentication flow. See [The Read Path](#
 getCollection(object)
 ```
 
-The `getCollection()` function takes an object with the properties of `docType` and `storagePath`.
+The `getCollection()` function takes an object with the properties of `docType`, `privateKey`, and `storagePath`.
 
 * docType [String]
   * documents
   * sheets
   * vault
   * contacts  
+* privateKey [String]
 * storagePath [String]
+
+**Make sure the `storagePath` does not have a trailing `/`.**
+
+The private key is used to decrypt the file and is the same key received after the authentication flow was completed. Wherever that key was temporarily stored, you'll need to fetch it and pass it along with the other properties to the object for this function.
 
 Here is an example call to get the documents index file:
 
 ```
 const object = {};
 object.docType = "documents";
-object.storagePath = "https://gaia.blockstack.org/hub/16KyUebBPPXgQLvA1f51bpsne3gL7Emdrc"
+object.privateKey = "029af140918274b366241cf830df9ca95144efd52bb3eafa69f569edf6abffcd08";
+object.storagePath = "https://gaia.blockstack.org/hub/16KyUebBPPXgQLvA1f51bpsne3gL7Emdrc";
 
 getCollection(object)
 
@@ -182,14 +188,18 @@ Once you have the index file, you can fetch a document based on the document's i
 }
 ```
 
-The id property is what you'll need to make the call to fetch the individual document. Similar to the `getCollection()` function, the `getFile()` function takes an object. This object **must** have the properties of `docType` and `id`.
+The id property is what you'll need to make the call to fetch the individual document. Similar to the `getCollection()` function, the `getFile()` function takes an object. This object **must** have the properties of `docType`, `storagePath`, `privateKey`, and `id`.
 
 * docType [String]
   * documents
   * sheets
   * vault
   * contacts  
+* storagePath [String]
+* privateKey [String]
 * id [String]
+
+**Make sure the `storagePath` does not have a trailing `/`.**
 
 The important thing to note from the above is that the id, while it might be a number in the JSON from the index file, will need to be passed in as a string.
 
@@ -198,8 +208,37 @@ Here is an example call to fetch a single document:
 ```
 const object = {};
 object.docType = "documents";
+object.storagePath = "https://gaia.blockstack.org/hub/16KyUebBPPXgQLvA1f51bpsne3gL7Emdrc";
+object.privateKey = '029af140918274b366241cf830df9ca95144efd52bb3eafa69f569edf6abffcd08';
 object.id = "123456789";
+
 getFile(object)
 
 //Returns JSON with the file's data
 ```
+
+### Reading Graphite Sheets
+
+Under construction - coming soon!
+
+### Reading Graphite Vault
+
+Under construction - coming soon!
+
+### Reading Graphite Contacts  
+
+Under construction - coming soon!
+
+### Writing Graphite Documents  
+
+Under construction - coming soon!
+
+### Writing Graphite Sheets
+
+Under construction - coming soon!
+
+### Writing Graphite Vault  
+
+Under construction - coming soon!
+
+### Writing Graphite Contacts  

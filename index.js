@@ -1,4 +1,5 @@
 import { decodeToken } from 'jsontokens';
+import axios from 'axios';
 const { createECDH } = require('crypto');
 const { decryptECIES } = require('blockstack/lib/encryption');
 
@@ -19,3 +20,27 @@ export function decryptPayload(token) {
   const payload = decryptECIES(privateKey, tokenData.payload);
   return payload;
 };
+
+export function getCollection(object) {
+  if(object.docType === "documents") {
+    axios.get(object.storagePath + '/documentscollection.json')
+      .then((res) => {
+        return JSON.parse(decryptECIES(object.privateKey, res.data))
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
+}
+
+export function getFile(object) {
+  if(object.docType === "documents") {
+    axios.get(object.storagePath + '//documents/' + object.id + '.json')
+      .then((res) => {
+        return JSON.parse(decryptECIES(object.privateKey, res.data))
+      })
+      .then(error => {
+        console.log(error);
+      })
+  }
+}
