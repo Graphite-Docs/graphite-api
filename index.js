@@ -2,10 +2,7 @@ import { decodeToken } from 'jsontokens';
 const { createECDH } = require('crypto');
 const { decryptECIES } = require('blockstack/lib/encryption');
 
-module.exports = handleOAuthFlow = () => {
-  const targetURI = 'http://localhost:3001/oauth/verify';
-  const appName = encodeURI('React App');
-  const redirectURI = encodeURI('localhost:3000');
+export function handleOAuthFlow(object) {
   const ecdh = createECDH('secp256k1');
   const separator = '?';
   ecdh.generateKeys('hex');
@@ -13,12 +10,12 @@ module.exports = handleOAuthFlow = () => {
   const encodedPubKey = encodeURI(pubKey);
   const privKey = ecdh.getPrivateKey('hex');
   localStorage.setItem('graphite-transit-key', JSON.stringify(privKey));
-  window.location.replace(targetURI + separator + appName + separator + redirectURI + separator + 'token=' + encodedPubKey + '=?');
-}
+  window.location.replace(object.targetURI + separator + object.appName + separator + object.redirectURI + separator + 'token=' + encodedPubKey + '=?');
+};
 
-module.exports = decryptPayload = (token) => {
+export function decryptPayload(token) {
   const privateKey = JSON.parse(localStorage.getItem('graphite-transit-key'));
   const tokenData = decodeToken(token);
   const payload = decryptECIES(privateKey, tokenData.payload);
-  console.log(payload);
-}
+  return payload;
+};
