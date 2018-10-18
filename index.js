@@ -23,9 +23,10 @@ export function decryptPayload(token) {
 
 export function getCollection(object) {
   if(object.docType === "documents") {
-    axios.get(object.storagePath + '/documentscollection.json')
+    return axios.get(object.storagePath + '/documentscollection.json')
       .then((res) => {
-        return decryptECIES(object.privateKey, res.data)
+        return decryptECIES(object.privateKey, res.data);
+        // console.log(data);
       })
       .catch(error => {
         console.log(error);
@@ -35,11 +36,11 @@ export function getCollection(object) {
 
 export function getFile(object) {
   if(object.docType === "documents") {
-    axios.get(object.storagePath + '//documents/' + object.id + '.json')
+    return axios.get(object.storagePath + '//documents/' + object.id + '.json')
       .then((res) => {
-        return decryptECIES(object.privateKey, res.data)
+        return decryptECIES(object.privateKey, res.data);
       })
-      .then(error => {
+      .catch(error => {
         console.log(error);
       })
   }
