@@ -133,6 +133,10 @@ You won't be able to see anything at that address, but you would be able to writ
 
 ### Reading Graphite Documents  
 
+**Usage**
+
+`import { getCollection, getFile } from 'graphite-docs';`
+
 Graphite documents are made up of two main components:
 
 1. An index file that points to each individual file
@@ -218,6 +222,10 @@ getCollection(object).then(data => {
 ```
 
 ### Reading Graphite Sheets
+
+**Usage**
+
+`import { getCollection, getFile } from 'graphite-docs';`
 
 Graphite sheets are made up of two main components:
 
