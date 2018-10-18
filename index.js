@@ -26,7 +26,14 @@ export function getCollection(object) {
     return axios.get(object.storagePath + '/documentscollection.json')
       .then((res) => {
         return decryptECIES(object.privateKey, res.data);
-        // console.log(data);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  } else if(object.docType === "sheets") {
+    return axios.get(object.storagePath + '/sheetscollection.json')
+      .then((res) => {
+        return decryptECIES(object.privateKey, res.data);
       })
       .catch(error => {
         console.log(error);
@@ -37,6 +44,14 @@ export function getCollection(object) {
 export function getFile(object) {
   if(object.docType === "documents") {
     return axios.get(object.storagePath + '//documents/' + object.id + '.json')
+      .then((res) => {
+        return decryptECIES(object.privateKey, res.data);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  } else if(object.docType === "sheets") {
+    return axios.get(object.storagePath + '//sheets/' + object.id + '.json')
       .then((res) => {
         return decryptECIES(object.privateKey, res.data);
       })

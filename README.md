@@ -219,7 +219,89 @@ getCollection(object).then(data => {
 
 ### Reading Graphite Sheets
 
-Under construction - coming soon!
+Graphite sheets are made up of two main components:
+
+1. An index file that points to each individual file
+2. A file that contains the actual content and additional meta data for the individual document
+
+To fetch a document, you will first need to fetch the index file as the document ID will be necessary in eventually fetching it. The index file is located at the following path:
+
+`$User-Storage-Path/sheetscollection.json`
+
+The storage path is obtained from the Authentication flow. See [The Read Path](#the-read-path). However, Graphite provides a convenient method for fetching the documents index file:
+
+```
+getCollection(object)
+```
+
+The `getCollection()` function takes an object with the properties of `docType`, `privateKey`, and `storagePath`.
+
+* docType [String]
+  * documents
+  * sheets
+  * vault
+  * contacts  
+* privateKey [String]
+* storagePath [String]
+
+**Make sure the `storagePath` does not have a trailing `/`.**
+
+The private key is used to decrypt the file and is the same key received after the authentication flow was completed. Wherever that key was temporarily stored, you'll need to fetch it and pass it along with the other properties to the object for this function.
+
+Here is an example call to get the sheets index file:
+
+```
+const object = {};
+object.docType = "sheets";
+object.privateKey = "029af140918274b366241cf830df9ca95144efd52bb3eafa69f569edf6abffcd08";
+object.storagePath = "https://gaia.blockstack.org/hub/16KyUebBPPXgQLvA1f51bpsne3gL7Emdrc";
+
+getCollection(object).then(data => {
+  console.log(JSON.parse(data));
+})
+
+```
+
+Once you have the index file, you can fetch a document based on the document's id. In the index file, a single document may look like this:
+
+```
+{
+  title: "Name of Sheet"
+  updated: "11/1/2017"
+  sharedWith: ["jehunter5811.id", "pbj.id"]
+  tags: ["One", "Two"]
+  id: 123456789
+}
+```
+
+The id property is what you'll need to make the call to fetch the individual sheet. Similar to the `getCollection()` function, the `getFile()` function takes an object. This object **must** have the properties of `docType`, `storagePath`, `privateKey`, and `id`.
+
+* docType [String]
+  * documents
+  * sheets
+  * vault
+  * contacts  
+* storagePath [String]
+* privateKey [String]
+* id [String]
+
+**Make sure the `storagePath` does not have a trailing `/`.**
+
+The important thing to note from the above is that the id, while it might be a number in the JSON from the index file, will need to be passed in as a string.
+
+Here is an example call to fetch a single document:
+
+```
+const object = {};
+object.docType = "sheets";
+object.storagePath = "https://gaia.blockstack.org/hub/16KyUebBPPXgQLvA1f51bpsne3gL7Emdrc";
+object.privateKey = '029af140918274b366241cf830df9ca95144efd52bb3eafa69f569edf6abffcd08';
+object.id = "123456789";
+
+getCollection(object).then(data => {
+  console.log(JSON.parse(data));
+})
+```
 
 ### Reading Graphite Vault
 
