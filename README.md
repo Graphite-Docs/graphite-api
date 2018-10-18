@@ -170,9 +170,9 @@ object.docType = "documents";
 object.privateKey = "029af140918274b366241cf830df9ca95144efd52bb3eafa69f569edf6abffcd08";
 object.storagePath = "https://gaia.blockstack.org/hub/16KyUebBPPXgQLvA1f51bpsne3gL7Emdrc";
 
-getCollection(object)
-
-//returns JSON with an array of documents
+getCollection(object).then(data => {
+  console.log(JSON.parse(data));
+})
 
 ```
 
@@ -212,9 +212,9 @@ object.storagePath = "https://gaia.blockstack.org/hub/16KyUebBPPXgQLvA1f51bpsne3
 object.privateKey = '029af140918274b366241cf830df9ca95144efd52bb3eafa69f569edf6abffcd08';
 object.id = "123456789";
 
-getFile(object)
-
-//Returns JSON with the file's data
+getCollection(object).then(data => {
+  console.log(JSON.parse(data));
+})
 ```
 
 ### Reading Graphite Sheets
