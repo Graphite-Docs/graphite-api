@@ -39,7 +39,7 @@ export function getCollection(object) {
         console.log(error);
       })
   } else if(object.docType === "vault") {
-    return axios.get(object.storagePath + '/contact.json')
+    return axios.get(object.storagePath + '/uploads.json')
       .then((res) => {
         return JSON.parse(decryptECIES(object.privateKey, res.data));
       })
