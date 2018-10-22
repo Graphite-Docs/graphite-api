@@ -25,7 +25,7 @@ export function getCollection(object) {
   if(object.docType === "documents") {
     return axios.get(object.storagePath + '/documentscollection.json')
       .then((res) => {
-        return decryptECIES(object.privateKey, res.data);
+        return JSON.parse(decryptECIES(object.privateKey, res.data)).value;
       })
       .catch(error => {
         console.log(error);
@@ -33,7 +33,23 @@ export function getCollection(object) {
   } else if(object.docType === "sheets") {
     return axios.get(object.storagePath + '/sheetscollection.json')
       .then((res) => {
-        return decryptECIES(object.privateKey, res.data);
+        return JSON.parse(decryptECIES(object.privateKey, res.data)).sheets;
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  } else if(object.docType === "vault") {
+    return axios.get(object.storagePath + '/contact.json')
+      .then((res) => {
+        return JSON.parse(decryptECIES(object.privateKey, res.data));
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  } else if(object.docType === "contacts") {
+    return axios.get(object.storagePath + '/contact.json')
+      .then((res) => {
+        return JSON.parse(decryptECIES(object.privateKey, res.data)).contacts;
       })
       .catch(error => {
         console.log(error);
@@ -45,7 +61,7 @@ export function getFile(object) {
   if(object.docType === "documents") {
     return axios.get(object.storagePath + '//documents/' + object.id + '.json')
       .then((res) => {
-        return decryptECIES(object.privateKey, res.data);
+        return JSON.parse(decryptECIES(object.privateKey, res.data));
       })
       .catch(error => {
         console.log(error);
@@ -53,7 +69,15 @@ export function getFile(object) {
   } else if(object.docType === "sheets") {
     return axios.get(object.storagePath + '//sheets/' + object.id + '.json')
       .then((res) => {
-        return decryptECIES(object.privateKey, res.data);
+        return JSON.parse(decryptECIES(object.privateKey, res.data));
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  } else if(object.docType === 'vault') {
+    return axios.get(object.storagePath + '/' + object.id + '.json')
+      .then((res) => {
+        return JSON.parse(decryptECIES(object.privateKey, res.data));
       })
       .catch(error => {
         console.log(error);
